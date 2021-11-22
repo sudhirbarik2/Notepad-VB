@@ -1,0 +1,52 @@
+Private Sub OpenToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OpenToolStripMenuItem.Click
+      'Check if there's text added to the textbox
+      If TextBox1.Modified Then
+          'If the text of notepad changed, the program will ask the user if they want to save the changes
+          Dim ask As MsgBoxResult
+          ask = MsgBox("Do you want to save the changes", MsgBoxStyle.YesNoCancel, "Open Document")
+          If ask = MsgBoxResult.No Then
+              OpenFileDialog1.ShowDialog()
+              TextBox1.Text = My.Computer.FileSystem.ReadAllText(OpenFileDialog1.FileName)
+          ElseIf ask = MsgBoxResult.Cancel Then
+          ElseIf ask = MsgBoxResult.Yes Then
+              SaveFileDialog1.ShowDialog()
+              My.Computer.FileSystem.WriteAllText(SaveFileDialog1.FileName, TextBox1.Text, False)
+              TextBox1.Clear()
+          End If
+      Else
+          'If textbox's text is still the same, notepad will show the OpenFileDialog
+          OpenFileDialog1.ShowDialog()
+          Try
+              TextBox1.Text = My.Computer.FileSystem.ReadAllText(OpenFileDialog1.FileName)
+          Catch ex As Exception
+          End Try
+      End If
+  End Sub
+
+
+
+
+
+
+Private Sub SaveToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SaveToolStripMenuItem.Click
+        SaveFileDialog1.ShowDialog()
+        ' the application will check if the file is already exists, if exists, it will ask the user if they want to replace it
+        If My.Computer.FileSystem.FileExists(SaveFileDialog1.FileName) Then
+            Dim ask As MsgBoxResult
+            ask = MsgBox("File already exists, would you like to replace it?", MsgBoxStyle.YesNo, "File Exists")
+            'if the user decides not to replace the existing file
+            If ask = MsgBoxResult.No Then
+                SaveFileDialog1.ShowDialog()
+                'if the user decides to replace the existing file
+            ElseIf ask = MsgBoxResult.Yes Then
+                My.Computer.FileSystem.WriteAllText(SaveFileDialog1.FileName, TextBox1.Text, False)
+            End If
+            'if the file doesn't exist
+        Else
+            Try
+                My.Computer.FileSystem.WriteAllText(SaveFileDialog1.FileName, TextBox1.Text, False)
+            Catch ex As Exception
+            End Try
+        End If
+End Sub
+- See more at: file:///C:/Users/Sudhir%20Barik/Desktop/Unused%20Dextop/VB/Notepad%20Tutorial%20in%20Visual%20Basic%20.NET%20-%20Page%202.htm#sthash.eoFvfUtr.dpuf
